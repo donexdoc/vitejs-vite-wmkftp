@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import TypeMe from '@/components/TypeMe.vue'
+import TypeMe, { type SelectValue } from '@/components/TypeMe.vue'
 
 // TODO FIXME
-const elementRef = ref<any>()
 
-function select(key: any, value: any) {
+type RefElement = {
+  innerState: number
+}
+
+type DefaultState = {
+  state: RefElement['innerState']
+}
+
+const elementRef = ref<RefElement>({ innerState: 0 })
+
+function select(key: string, value: SelectValue) {
   alert(`Select ${key} with type ${typeof value}`)
 }
 
-function hover(e: any) {
+function hover(e: MouseEvent) {
   elementRef.value.innerState = e.x
 }
 </script>
@@ -21,7 +30,7 @@ function hover(e: any) {
       * Необходимо типизировать компоненты `TypesView.vue` и `TypeMe.vue`
       */
     </pre>
-    <type-me name="First" :options="new Map()"></type-me>
+    <type-me name="First" :options="new Map<string, SelectValue>()"></type-me>
     <type-me
       :options="
         new Map([
@@ -35,7 +44,7 @@ function hover(e: any) {
     ></type-me>
     <type-me
       ref="elementRef"
-      :name="`X: ${elementRef?.innerState}`"
+      :name="`X: ${elementRef.innerState}`"
       :options="
         new Map([
           ['key1', { a: 'a' }],
@@ -46,7 +55,7 @@ function hover(e: any) {
       @select="select"
       @hover="hover"
     >
-      <template #default="{ state }">
+      <template #default="{ state }: DefaultState">
         <i>X: {{ state }}</i>
       </template>
     </type-me>

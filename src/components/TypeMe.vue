@@ -1,10 +1,13 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, type PropType } from 'vue'
+
+export type SelectValue = number | { a: string }
+type MapValues = Map<string, SelectValue>
 
 const props = defineProps({
   name: String,
   options: {
-    type: Object,
+    type: Object as PropType<MapValues>,
     required: true
   },
   isFun: {
