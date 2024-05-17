@@ -54,9 +54,9 @@ const emit = defineEmits(['toggleState'])
       </button>
       &nbsp;
       <span
-        v-for="(a, idx) of Array.from(Array(level ?? DEFAULT_LEVEL).keys())"
+        v-for="(b, idx) of Array.from(Array(level ?? DEFAULT_LEVEL).keys())"
         :key="idx"
-        >{{ a }},
+        >{{ b }},
       </span>
     </div>
   </div>
