@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const list = ref<Array<string>>([])
+const CHUNK_SIZE = 10
+const list = ref<Array<Array<string>>>([])
 
 function generateList() {
+  list.value = []
   const length = Math.round(Math.random() * 100)
-  list.value = Array.from(Array(length).keys()).map((a) => a.toString())
+
+  const items = Array.from(Array(length).keys()).map((a) => a.toString())
+
+  for (let index = 0; index < length; index += CHUNK_SIZE) {
+    list.value.push(items.slice(index, index + CHUNK_SIZE))
+  }
 }
 </script>
 
@@ -28,9 +35,11 @@ function generateList() {
 
     <div class="list-wrapper">
       <!-- TODO -->
-      
-      <div v-for="(item, idx) of list" :key="idx" class="list-item">
-        {{ item }}
+
+      <div v-for="(chunk, idx) of list" :key="idx" class="list-chunk">
+        <div v-for="(item, idxc) of chunk" :key="idxc" class="list-item">
+          {{ item }}
+        </div>
       </div>
 
       <!-- TODO -->
@@ -42,9 +51,14 @@ function generateList() {
 .list-wrapper {
   /* TODO */
   display: flex;
-  flex-direction: column;
+
   gap: 1em;
   overflow: auto;
+}
+
+.list-chunk {
+  display: flex;
+  flex-direction: column;
 }
 
 .list-item {
