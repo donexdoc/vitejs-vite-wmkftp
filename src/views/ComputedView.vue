@@ -18,13 +18,32 @@ const structFinal = computed<IStruct>(() =>
 )
 
 const countChanges = ref(0)
+
+const changed = (newValue: IStruct, oldValue: IStruct) => {
+  if (newValue.length !== oldValue.length) {
+    return true
+  }
+
+  for (let index = 0; index < newValue.length; index++) {
+    if (
+      oldValue === undefined ||
+      oldValue[index]?.pos !== newValue[index].pos ||
+      oldValue[index]?.val !== newValue[index].val
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
 watch(
   () => structFinal.value,
-  () => (countChanges.value += 1)
-)
-watch(
-  () => structFinal.value,
-  () => {
+  (newValue, oldValue) => {
+    if (!changed(newValue, oldValue)) return
+
+    countChanges.value += 1
+
     const parent = document.querySelector('#burnrow')
     const child = document.createTextNode('🔥')
 
